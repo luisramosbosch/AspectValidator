@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Built-By: RAL2BE
-Build-Jdk: 17.0.6
-Main-Class: com.bosch.HelloRDf4J
-Created-By: Maven Integration for Eclipse
-
