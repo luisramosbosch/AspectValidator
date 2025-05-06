@@ -56,22 +56,7 @@ public class RDFUtils {
 	     // Replace special characters with spaces
 	     preferredNamestr = preferredNamestr.replaceAll("[_\\-+.^:,]", " ");
 	
-	     // Convert acronyms (words with 2 or more uppercase letters) to camel case
-	     /*
-	     Pattern pattern = Pattern.compile("\\b[A-Z]{2,}\\b");
-	     Matcher matcher = pattern.matcher(preferredNamestr);
-	     StringBuffer modifiedName = new StringBuffer();
-	
-	     while (matcher.find()) {
-	         String acronym = matcher.group();
-	         String camelCaseAcronym = acronym.charAt(0) + acronym.substring(1).toLowerCase();
-	         matcher.appendReplacement(modifiedName, camelCaseAcronym);
-	     }
-	     matcher.appendTail(modifiedName);
-	
-	     // Convert the rest of the string to lowercase
-	     preferredNamestr = modifiedName.toString().toLowerCase();
-	     */
+	     
 	     if (langTag.toString().equals("Optional[en]")) {
 		     preferredNamestr = preferredNamestr.toString().toLowerCase();
 		 }//only lower case to English language
@@ -290,28 +275,37 @@ public class RDFUtils {
 	 }
     
 
+
 	// Function to validate example value for properties with primitive datatype characteristics
 	public static void validateExampleValue(Model model, Logger logger) {
 	    for (Statement stmt : model.filter(null, valueFactory.createIRI("urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#characteristic"), null)) {
 	        Resource property = stmt.getSubject();
-	        IRI characteristic = (IRI) stmt.getObject();
+	        Value object = stmt.getObject();
 
-	        // Check if the characteristic has a primitive datatype
-	        boolean hasPrimitiveDatatype = false;
-	        for (Statement charStmt : model.filter(characteristic, valueFactory.createIRI("urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#dataType"), null)) {
-	            String dataType = charStmt.getObject().stringValue();
-	            if (primitiveDatatypes.contains(dataType)) {
-	                hasPrimitiveDatatype = true;
-	                break;
-	            }
-	        }
+	        // Ensure the object is an IRI before casting
+	        if (object instanceof IRI) {
+	            IRI characteristic = (IRI) object;
 
-	        // If the characteristic has a primitive datatype, check for exampleValue
-	        if (hasPrimitiveDatatype) {
-	            boolean hasExampleValue = model.contains(property, valueFactory.createIRI("urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#exampleValue"), null);
-	            if (!hasExampleValue) {
-	                logger.warning("Missing exampleValue for property with primitive datatype characteristic: " + property);
+	            // Check if the characteristic has a primitive datatype
+	            boolean hasPrimitiveDatatype = false;
+	            for (Statement charStmt : model.filter(characteristic, valueFactory.createIRI("urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#dataType"), null)) {
+	                String dataType = charStmt.getObject().stringValue();
+	                if (primitiveDatatypes.contains(dataType)) {
+	                    hasPrimitiveDatatype = true;
+	                    break;
+	                }
 	            }
+
+	            // If the characteristic has a primitive datatype, check for exampleValue
+	            if (hasPrimitiveDatatype) {
+	                boolean hasExampleValue = model.contains(property, valueFactory.createIRI("urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#exampleValue"), null);
+	                if (!hasExampleValue) {
+	                    logger.warning("Missing exampleValue for property with primitive datatype characteristic: " + property);
+	                }
+	            }
+	        } else {
+	            // Log a warning if the object is not an IRI
+	            logger.warning("The object is not an IRI but a " + object.getClass().getSimpleName() + ": " + object);
 	        }
 	    }
 	}

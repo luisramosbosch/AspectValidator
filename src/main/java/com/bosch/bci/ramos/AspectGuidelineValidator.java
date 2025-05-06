@@ -92,19 +92,23 @@ public class AspectGuidelineValidator {
                 // Check and modify preferredName if necessary
                 if (stmt.getPredicate().stringValue().equals("urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#preferredName")) {
                     Value preferredName = stmt.getObject();
-                    Value modifiedPreferredName = RDFUtils.checkAndModifyPreferredName(preferredName, stmt);
-
-                    if (!preferredName.stringValue().equals(modifiedPreferredName.stringValue())) {
-                        System.out.println("Modified preferredName: " + preferredName + " to " + modifiedPreferredName);
-                        logger.info("Modified preferredName: " + preferredName + " to " + modifiedPreferredName + " for entity: " + stmt.getSubject());
-                        statementsToModify.add(stmt);
-                    } else {
-                        String preferredNamestr = stmt.getObject().stringValue();
-                        if (preferredNamestr == null || preferredNamestr.isEmpty()) {
-                            System.out.println("No preferred name found");
-                            logger.info("Modified preferredName not found for entity: " + stmt.getSubject());
-                        }
-                    }
+                    String preferredNamestr = stmt.getObject().stringValue();
+	           	     if (preferredNamestr != null || !preferredNamestr.isEmpty()) {
+	           	    	Value modifiedPreferredName = RDFUtils.checkAndModifyPreferredName(preferredName, stmt);
+	                    if (!preferredName.stringValue().equals(modifiedPreferredName.stringValue())) {
+	                        System.out.println("Modified preferredName: " + preferredName + " to " + modifiedPreferredName);
+	                        logger.info("Modified preferredName: " + preferredName + " to " + modifiedPreferredName + " for entity: " + stmt.getSubject());
+	                        statementsToModify.add(stmt);
+	                    } else {
+	                        preferredNamestr = stmt.getObject().stringValue();
+	                        if (preferredNamestr == null || preferredNamestr.isEmpty()) {
+	                            System.out.println("No preferred name found");
+	                            logger.info("Modified preferredName not found for entity: " + stmt.getSubject());
+	                        }
+	                    }
+	           	     } else {
+	                        logger.warning("Preferred Name of entity: "+ stmt.getSubject()+ "is not present");
+	           	     }
                 }
 
                 // Check and modify description if necessary
