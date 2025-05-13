@@ -11,6 +11,22 @@ AspectValidator can be used to check th fulfilment of [Bosch Modeling Borad Guid
 # Run application.
 
 1. Check minimum installed java version in your system is 17 or higher:   `java -version`
-2. Clone this repository: `git clone https://github.com/luisramosbosch/AspectValidator.git' 
+2. Clone this repository: `git clone https://github.com/luisramosbosch/AspectValidator.git `
 3. Navigate to AspectValidator\target and open the terminal o there.
 4. Execute in your terminal: `java -jar AspectValidator-version-SNAPSHOT-uber.jar`
+5. As the folllwing window prompts, please elect the intended aspect file to analyse:
+![image](https://github.com/user-attachments/assets/4572d36c-4e04-4ab6-bb67-84ad9c82b149)
+
+6. The tool will ask you if you want ot make a copy of the file (recommended), and after accepting the file will be inspected.
+7. if you do not want to analize further files, then it woill terminate.
+8. two new files will be generated:
+![image](https://github.com/user-attachments/assets/981ba286-97c8-461d-82c5-f4a9e5fa150c)
+
+A file_copy.ttl, which is the original, and initial file. And a file_logs.txt which contain detailed logs of the findings and changes done by the tool. 
+
+
+
+
+
+
+
