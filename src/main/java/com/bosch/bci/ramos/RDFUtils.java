@@ -1,5 +1,17 @@
 package com.bosch.bci.ramos;
 
+/** 
+ * Copyright (C) {Robert Bosch GmbH} - All Rights Reserved
+ *
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by {Luis Enrique ramos Garcia} <{LuisEnrique.RamosGarcia@bosch.com}>, {13.05.2025}
+ */
+
+
+
+
+
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Values;
