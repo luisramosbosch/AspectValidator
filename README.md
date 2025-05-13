@@ -10,5 +10,7 @@ AspectValidator can be used to check th fulfilment of [Bosch Modeling Borad Guid
 
 # Run application.
 
-1. Clone https://github.com/luisramosbosch/AspectValidator.git
-2. Navigate to AspectValidator\target
+1. Check minimum installed java version in your system is 17 or higher:   `java -version`
+2. Clone this repository: `git clone https://github.com/luisramosbosch/AspectValidator.git' 
+3. Navigate to AspectValidator\target and open the terminal o there.
+4. Execute in your terminal: `java -jar AspectValidator-version-SNAPSHOT-uber.jar`
