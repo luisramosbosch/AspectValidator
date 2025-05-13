@@ -20,6 +20,8 @@ AspectValidator can be used to check th fulfilment of [Bosch Modeling Borad Guid
 6. The tool will ask you if you want to make a copy of the file (recommended), and after accepting, the file will be inspected.
 7. If you do not want to analize further files, then it woill terminate.
 8. Two new files will be generated:
+
+   
 ![image](https://github.com/user-attachments/assets/981ba286-97c8-461d-82c5-f4a9e5fa150c)
 
 A file called file_copy.ttl, which is the original, and initial file. And a file called file_logs.txt which contains detailed logs of the findings and changes done by the tool. 
