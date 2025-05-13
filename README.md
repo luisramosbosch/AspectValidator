@@ -1,10 +1,10 @@
 
 # Intended Use
-AspectValidator can be used to check th fulfilment of [Bosch Modeling Borad Guidelines](https://inside-docupedia.bosch.com/confluence/display/semstack/WS%3A+Aspect+Model+Modelling+Guideline#WS:AspectModelModellingGuideline-Descriptions). More specifically:
+AspectValidator can be used to check the fulfilment of [Bosch Modeling Borad Guidelines](https://inside-docupedia.bosch.com/confluence/display/semstack/WS%3A+Aspect+Model+Modelling+Guideline#WS:AspectModelModellingGuideline-Descriptions). More specifically:
 
 - preferredName, in English, it will always change any capital letter to lower case.
-- Any special character (!"§$%&/()=?*+~#') in prefName will be remove.
-- Description text must begin with capital and must end in a "."
+- Any special character (!"§$%&/()=?*+~#') in prefName will be removed.
+- Description text must begin with capital letter and must end in a "."
 - preferredName and description must be present, otherwise a report is generated.
 - It checks that every property, with a primitive datatype, has en example value.
 
@@ -12,13 +12,13 @@ AspectValidator can be used to check th fulfilment of [Bosch Modeling Borad Guid
 
 1. Check minimum installed java version in your system is 17 or higher:   `java -version`
 2. Clone this repository: `git clone https://github.com/luisramosbosch/AspectValidator.git `
-3. Navigate to AspectValidator\target and open the terminal o there.
+3. Navigate to AspectValidator\target and open the terminal on there.
 4. Execute in your terminal: `java -jar AspectValidator-version-SNAPSHOT-uber.jar`
-5. As the folllwing window prompts, please select the intended aspect file to analyse:
+5. As the following window prompts, please select the intended aspect file to analyse:
 ![image](https://github.com/user-attachments/assets/4572d36c-4e04-4ab6-bb67-84ad9c82b149)
 
-6. The tool will ask you if you want to make a copy of the file (recommended), and after accepting, the file will be inspected.
-7. If you do not want to analize further files, then it woill terminate.
+6. The tool will ask you if you want to make a copy of the file (recommended), and after accepting it, the file will be inspected.
+7. If you do not want to analize further files, then it will terminate.
 8. Two new files will be generated:
 
    
