@@ -7,4 +7,8 @@ AspectValidator can be used to check th fulfilment of [Bosch Modeling Borad Guid
 - Description text must begin with capital and must end in a "."
 - preferredName and description must be present, otherwise a report is generated.
 - It checks that every property, with a primitive datatype, has en example value.
-- 
+
+# Run application.
+
+1. Clone https://github.com/luisramosbosch/AspectValidator.git
+2. Navigate to AspectValidator\target
