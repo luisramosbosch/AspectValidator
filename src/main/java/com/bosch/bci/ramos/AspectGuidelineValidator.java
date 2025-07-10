@@ -94,7 +94,7 @@ public class AspectGuidelineValidator {
       String ttlFilePath = file.getAbsolutePath();
       if ( response == JOptionPane.YES_OPTION ) {
          // Create a copy of the file
-         File copyFile = new File( ttlFilePath.replace( ".ttl", "_copy.ttl" ) );
+         File copyFile = new File( ttlFilePath.replace( ".ttl", "_original.ttl" ) );
          try {
             Files.copy( file.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING );
             System.out.println( "Copy of the file created: " + copyFile.getAbsolutePath() );

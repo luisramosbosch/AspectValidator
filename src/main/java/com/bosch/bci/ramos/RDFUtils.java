@@ -66,11 +66,15 @@ public class RDFUtils {
 	     Optional<String> langTag = preferredNameLit.getLanguage();
 	
 	     // Replace special characters with spaces
-	     preferredNamestr = preferredNamestr.replaceAll("[_\\-+.^:,]", " ");
+	     //preferredNamestr = preferredNamestr.replaceAll("[_\\-+.^:,]", " ");
 	
 	     
 	     if (langTag.toString().equals("Optional[en]")) {
-		     preferredNamestr = preferredNamestr.toString().toLowerCase();
+		     //preferredNamestr = preferredNamestr.toString().toLowerCase();
+	    	 //identify accronyms in pref name. 
+	          preferredNamestr = modifyCapitalizedWords(preferredNamestr);
+	    	  //preferredNamestr = Character.toLowerCase(preferredNamestr.charAt(0)) + preferredNamestr.substring(1);
+
 		 }//only lower case to English language
 	
 	     Literal literal;
@@ -344,5 +348,43 @@ public class RDFUtils {
 	    // Return null if no match is found
 	    return null;
 	}//end of checkCopyrightYear
+	
+	//function to check if accronyms are present
+	
+
+
+	public static String modifyCapitalizedWords(String input) {
+	    // Split the input into words based on whitespace
+	    String[] words = input.split("\\s+");
+	    StringBuilder result = new StringBuilder();
+	
+	    for (String word : words) {
+	        if (word.isEmpty()) {
+	            continue;
+	        }
+	        // Check if the word begins with a capital letter
+	        if (Character.isUpperCase(word.charAt(0))) {
+	            // Exception 1: Keep word as is if it is an acronym (length > 1 and all uppercase)
+	            if (word.length() > 1 && word.equals(word.toUpperCase())) {
+	                result.append(word).append(" ");
+	                continue;
+	            }
+	            // Exception 2: Keep word as is if it contains any of these special characters: [_\-+.^:,]
+	            if (word.matches(".*[\\_\\-\\+\\.\\^:,].*")) {
+	                result.append(word).append(" ");
+	                continue;
+	            }
+	            // Otherwise, change only the first character to lower case
+	            String modified = Character.toLowerCase(word.charAt(0)) + word.substring(1);
+	            result.append(modified).append(" ");
+	        } else {
+	            // If word does not begin with a capital letter, keep it as is
+	            result.append(word).append(" ");
+	        }
+	    }
+	    // Return the processed string trimmed from extra spaces
+	    return result.toString().trim();
+	}
+
 
 }//end of class
