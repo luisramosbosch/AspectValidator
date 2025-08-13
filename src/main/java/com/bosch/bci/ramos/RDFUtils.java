@@ -306,6 +306,7 @@ public class RDFUtils {
 	            boolean hasPrimitiveDatatype = false;
 	            for (Statement charStmt : model.filter(characteristic, valueFactory.createIRI("urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#dataType"), null)) {
 	                String dataType = charStmt.getObject().stringValue();
+	                System.out.println("example value datatype "+dataType);
 	                if (primitiveDatatypes.contains(dataType)) {
 	                    hasPrimitiveDatatype = true;
 	                    break;

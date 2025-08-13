@@ -23,9 +23,11 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
 
 public class AspectGuidelineValidator {
    private static final Logger logger = Logger.getLogger( AspectGuidelineValidator.class.getName() );
@@ -76,7 +78,18 @@ public class AspectGuidelineValidator {
             if ( !file.getName().endsWith( ".ttl" ) )
                continue;
             try {
-               analyzeFile( file, response );
+            	// Call the static method from SammMetaModelVersionExtractor
+                // to get the highest SAMM meta-model URN for the current .ttl file.
+                Optional<String> sammNamespace = SammMetaModelVersionExtractor.getHighestSammMetaModelUrn(file.getAbsolutePath());
+                if (sammNamespace.isPresent()) {
+                    String foundUrn = sammNamespace.get();
+                    // Assuming analyzeFile needs the URN, adjust its signature if necessary
+                    analyzeFile(file, response, foundUrn); // Pass the found URN
+                    logger.info("Processed file: " + file.getName() + " with SAMM namespace: " + foundUrn);
+                } else {
+                    // If no SAMM URN is found in a .ttl file, throw an IOException
+                    throw new IOException("Missing SAMM namespace in file: " + file.getName() + ", please check files");
+                }
             } catch ( Exception e ) {
                //TODO
             }
@@ -90,7 +103,7 @@ public class AspectGuidelineValidator {
       }
    }
 
-   private static void analyzeFile( File file, int response ) {
+   private static void analyzeFile( File file, int response, String foundUrn ) {
       String ttlFilePath = file.getAbsolutePath();
       if ( response == JOptionPane.YES_OPTION ) {
          // Create a copy of the file
@@ -139,19 +152,19 @@ public class AspectGuidelineValidator {
       // Iterate over statements
       for ( Statement stmt : model ) {
          // Check and modify preferredName if necessary
-         if ( stmt.getPredicate().stringValue().equals( "urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#preferredName" ) ) {
+         if ( stmt.getPredicate().stringValue().equals( foundUrn+"preferredName" ) ) {
             Value preferredName = stmt.getObject();
             String preferredNamestr = stmt.getObject().stringValue();
             if ( preferredNamestr != null || !preferredNamestr.isEmpty() ) {
-               Value modifiedPreferredName = RDFUtils.checkAndModifyPreferredName( preferredName, stmt );
+               Value modifiedPreferredName = RDFUtils.checkAndModifyPreferredName( preferredName, stmt);
                if ( !preferredName.stringValue().equals( modifiedPreferredName.stringValue() ) ) {
-                  System.out.println( "Modified preferredName: " + preferredName + " to " + modifiedPreferredName );
+                  //System.out.println( "Modified preferredName: " + preferredName + " to " + modifiedPreferredName );
                   logger.info( "Modified preferredName: " + preferredName + " to " + modifiedPreferredName + " for entity: " + stmt.getSubject() );
                   statementsToModify.add( stmt );
                } else {
                   preferredNamestr = stmt.getObject().stringValue();
                   if ( preferredNamestr == null || preferredNamestr.isEmpty() ) {
-                     System.out.println( "No preferred name found" );
+                     //System.out.println( "No preferred name found" );
                      logger.info( "Modified preferredName not found for entity: " + stmt.getSubject() );
                   }
                }
@@ -161,21 +174,21 @@ public class AspectGuidelineValidator {
          }
 
          // Check and modify description if necessary
-         if ( stmt.getPredicate().stringValue().equals( "urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#description" ) ) {
+         if ( stmt.getPredicate().stringValue().equals( foundUrn+"description" ) ) {
             Value description = stmt.getObject();
             Value modifiedDescription = RDFUtils.checkAndModifyDescription( description, stmt );
 
             if ( !description.equals( modifiedDescription ) ) {
-               System.out.println( "Modified description: " + description + " to " + modifiedDescription );
+               //System.out.println( "Modified description: " + description + " to " + modifiedDescription );
                logger.info( "Modified description: " + description + " to " + modifiedDescription + " for entity: " + stmt.getSubject() );
                statementsToModify.add( stmt );
             }
          }
 
          // Check if preferredName and description are the same
-         if ( stmt.getPredicate().stringValue().equals( "urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#preferredName" ) ) {
+         if ( stmt.getPredicate().stringValue().equals( foundUrn+"preferredName" ) ) {
             Value preferredName = stmt.getObject();
-            for ( Statement descStmt : model.filter( stmt.getSubject(), valueFactory.createIRI( "urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#description" ),
+            for ( Statement descStmt : model.filter( stmt.getSubject(), valueFactory.createIRI( foundUrn+"description" ),
                   null ) ) {
                Value description = descStmt.getObject();
                if ( preferredName.stringValue().equals( description.stringValue() ) ) {
@@ -187,11 +200,11 @@ public class AspectGuidelineValidator {
 
       // Modify the collected statements
       for ( Statement stmt : statementsToModify ) {
-         if ( stmt.getPredicate().stringValue().equals( "urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#preferredName" ) ) {
+         if ( stmt.getPredicate().stringValue().equals( foundUrn+"preferredName" ) ) {
             Value modifiedPreferredName = RDFUtils.checkAndModifyPreferredName( stmt.getObject(), stmt );
             model.remove( stmt );
             model.add( stmt.getSubject(), stmt.getPredicate(), modifiedPreferredName );
-         } else if ( stmt.getPredicate().stringValue().equals( "urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#description" ) ) {
+         } else if ( stmt.getPredicate().stringValue().equals( foundUrn+"description" ) ) {
             Value modifiedDescription = RDFUtils.checkAndModifyDescription( stmt.getObject(), stmt );
             model.remove( stmt );
             model.add( stmt.getSubject(), stmt.getPredicate(), modifiedDescription );
