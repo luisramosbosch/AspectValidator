@@ -213,14 +213,14 @@ public class AspectGuidelineValidator {
 
       // Check required properties
       try {
-         RDFUtils.checkRequiredProperties( model, logger );
+         RDFUtils.checkRequiredProperties( model, logger,foundUrn );
       } catch ( Exception e ) {
          e.printStackTrace();
       }
 
       // Validate example value for properties with primitive datatype characteristics
       try {
-         RDFUtils.validateExampleValue( model, logger );
+         RDFUtils.validateExampleValue( model, logger,foundUrn );
       } catch ( Exception e ) {
          e.printStackTrace();
       }
